@@ -44,12 +44,6 @@ A simple full-stack scheduling project built for learning:
 └── README.md
 ```
 
-## What Was Cleaned/Organized
-
-- Removed stale documentation references to folders that are not present.
-- Kept the codebase split cleanly into `backend/` and `frontend/`.
-- Kept feature-based backend modules (`users`, `schedules`) for easier learning.
-- Kept all hardcoded runtime values in code (as requested) and removed env-file dependency.
 
 ## Ports and URLs
 
@@ -256,9 +250,3 @@ npm run dev:frontend
 - JWT secret: `backend/utils/jwt.js`
 - Frontend API base URL: `frontend/views/login.html`, `frontend/public/js/dashboard.js`
 - Frontend server port: `frontend/server.js`
-
-## Notes
-
-- No `.env` usage in this version.
-- This is intentionally a beginner-level, minimal structure.
-- If a port is busy, stop old process first and restart.
