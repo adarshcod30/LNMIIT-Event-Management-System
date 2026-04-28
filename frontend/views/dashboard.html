@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Scheduling Module</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="dashboard-top">
+            <h1>Scheduling Dashboard</h1>
+            <div>
+                <span id="userLabel"></span>
+                <button id="logoutBtn" class="small-btn" type="button">Logout</button>
+            </div>
+        </div>
+
+        <div id="alertBox" class="alert"></div>
+
+        <div class="card">
+            <h2 id="formTitle">Add Schedule</h2>
+            <form id="scheduleForm">
+                <label>Event Name</label>
+                <input type="text" id="eventName" required>
+
+                <label>Round Name</label>
+                <input type="text" id="roundName" required>
+
+                <label>Round Number</label>
+                <input type="number" id="roundNumber" min="1" value="1" required>
+
+                <label>Date</label>
+                <input type="date" id="date" required>
+
+                <label>Start Time</label>
+                <input type="text" id="startTime" placeholder="10:00 AM" required>
+
+                <label>End Time</label>
+                <input type="text" id="endTime" placeholder="12:00 PM" required>
+
+                <label>Venue</label>
+                <input type="text" id="venue" required>
+
+                <label>Status</label>
+                <select id="status">
+                    <option value="scheduled">scheduled</option>
+                    <option value="ongoing">ongoing</option>
+                    <option value="completed">completed</option>
+                    <option value="postponed">postponed</option>
+                </select>
+
+                <input type="hidden" id="scheduleId">
+
+                <div class="button-row">
+                    <button type="submit">Save</button>
+                    <button type="button" id="cancelEditBtn" class="secondary-btn">Cancel Edit</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>All Schedules</h2>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Event</th>
+                            <th>Round</th>
+                            <th>No.</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Venue</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scheduleTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/dashboard.js"></script>
+</body>
+</html>

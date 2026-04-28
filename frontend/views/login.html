@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Scheduling Module</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <h1>Scheduling Module</h1>
+            <p class="subtitle">Login or create account</p>
+
+            <div class="tab-row">
+                <button id="loginTab" class="tab-btn active" type="button" onclick="showTab('login')">Login</button>
+                <button id="registerTab" class="tab-btn" type="button" onclick="showTab('register')">Register</button>
+            </div>
+
+            <div id="authAlert" class="alert"></div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <label>Email</label>
+                <input type="email" id="loginEmail" required>
+
+                <label>Password</label>
+                <input type="password" id="loginPassword" minlength="6" required>
+
+                <button type="submit">Login</button>
+            </form>
+
+            <form id="registerForm" class="hidden" onsubmit="handleRegister(event)">
+                <label>Name</label>
+                <input type="text" id="registerName" required>
+
+                <label>Email</label>
+                <input type="email" id="registerEmail" required>
+
+                <label>Password</label>
+                <input type="password" id="registerPassword" minlength="6" required>
+
+                <button type="submit">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:4000';
+
+        function showTab(tab) {
+            document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+            document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+            document.getElementById('loginTab').classList.toggle('active', tab === 'login');
+            document.getElementById('registerTab').classList.toggle('active', tab === 'register');
+            hideAlert();
+        }
+
+        function showAlert(message, type) {
+            const alert = document.getElementById('authAlert');
+            alert.textContent = message;
+            alert.className = 'alert alert-' + type + ' show';
+        }
+
+        function hideAlert() {
+            document.getElementById('authAlert').className = 'alert';
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                return showAlert('Please fill in all fields.', 'error');
+            }
+
+            try {
+                const res = await fetch(API_BASE_URL + '/api/users/login', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    showAlert('Login successful.', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 400);
+                } else {
+                    showAlert(data.message, 'error');
+                }
+            } catch (err) {
+                showAlert('Server error. Please try again.', 'error');
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
+            const password = document.getElementById('registerPassword').value;
+
+            if (!name || !email || !password) {
+                return showAlert('Please fill in all fields.', 'error');
+            }
+            if (password.length < 6) {
+                return showAlert('Password must be at least 6 characters.', 'error');
+            }
+
+            try {
+                const res = await fetch(API_BASE_URL + '/api/users/register', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    showAlert('Registration successful. Please login.', 'success');
+                    setTimeout(() => showTab('login'), 700);
+                } else {
+                    showAlert(data.message, 'error');
+                }
+            } catch (err) {
+                showAlert('Server error. Please try again.', 'error');
+            }
+        }
+
+        checkSession();
+
+        async function checkSession() {
+            try {
+                const res = await fetch(API_BASE_URL + '/api/users/me', {
+                    credentials: 'include'
+                });
+
+                if (res.ok) {
+                    window.location.href = '/dashboard';
+                }
+            } catch (err) {
+                // Keep user on login page if backend is not reachable.
+            }
+        }
+    </script>
+</body>
+</html>
