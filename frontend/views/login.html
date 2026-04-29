@@ -82,10 +82,14 @@
                     body: JSON.stringify({ email, password })
                 });
                 const data = await res.json();
+                console.log('Login response status:', res.status);
+                console.log('Login response data:', data);
 
                 if (res.ok) {
                     showAlert('Login successful.', 'success');
+                    console.log('Redirecting to dashboard in 400ms...');
                     setTimeout(() => {
+                        console.log('Navigating to ./dashboard.html');
                         window.location.href = './dashboard.html';
                     }, 400);
                 } else {

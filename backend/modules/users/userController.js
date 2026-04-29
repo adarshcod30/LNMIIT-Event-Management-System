@@ -45,7 +45,7 @@ const login = async (req, res) => {
         const token = generateToken(user);
 
         res.cookie('token', token, {
-            httpOnly: true,
+            // httpOnly: true,
             maxAge: 24 * 60 * 60 * 1000
         });
 
@@ -60,7 +60,7 @@ const login = async (req, res) => {
 
 const logout = (req, res) => {
     res.clearCookie('token', {
-        httpOnly: true
+        // httpOnly: true
     });
 
     res.json({ message: 'Logged out successfully.' });

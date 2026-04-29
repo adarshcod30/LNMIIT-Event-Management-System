@@ -13,13 +13,17 @@ cancelEditBtn.addEventListener('click', resetForm);
 initDashboard();
 
 async function initDashboard() {
+    console.log('Dashboard loading, checking session...');
     const me = await api('/api/users/me');
+    console.log('Session check response:', me);
 
     if (!me.ok) {
+        console.log('User not authenticated, redirecting to login');
         redirectToLogin();
         return;
     }
 
+    console.log('User authenticated:', me.data);
     document.getElementById('userLabel').textContent = `Logged in: ${me.data.name}`;
     loadSchedules();
 }
@@ -36,19 +40,27 @@ async function api(url, method = 'GET', body = null) {
         opts.body = JSON.stringify(body);
     }
 
-    const res = await fetch(API_BASE_URL + url, opts);
-    let data = {};
     try {
-        data = await res.json();
+        console.log(`API Call: ${method} ${API_BASE_URL + url}`);
+        const res = await fetch(API_BASE_URL + url, opts);
+        console.log(`Response status: ${res.status}`);
+        let data = {};
+        try {
+            data = await res.json();
+        } catch (error) {
+            data = {};
+        }
+        console.log(`Response data:`, data);
+
+        if (res.status === 401 && url !== '/api/users/logout') {
+            redirectToLogin();
+        }
+
+        return { ok: res.ok, data };
     } catch (error) {
-        data = {};
+        console.error('API Error:', error);
+        return { ok: false, data: { error: error.message } };
     }
-
-    if (res.status === 401 && url !== '/api/users/logout') {
-        redirectToLogin();
-    }
-
-    return { ok: res.ok, data };
 }
 
 function showAlert(msg, type) {
