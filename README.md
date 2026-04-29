@@ -5,7 +5,7 @@ A simple full-stack scheduling project built for learning:
 1. User registration and login
 2. Cookie-based authentication (JWT stored in HTTP-only cookie)
 3. Schedule CRUD (create, list, update, delete)
-4. Frontend and backend running on different ports with CORS
+4. Single-port deployment (no cross-origin complexity)
 
 ## Final Organized Structure
 
@@ -51,40 +51,30 @@ A simple full-stack scheduling project built for learning:
 npm install
 npm start
 ```
-Backend runs on `http://localhost:4000`
 
-### Start Frontend (Simple Static Server)
+Open browser to: `http://localhost:4000`
 
-**Option 1: Using Python (recommended for simplicity)**
-```bash
-cd frontend
-python -m http.server 3000
-```
+**That's it!** The backend serves both the API and frontend pages. No separate frontend server needed.
 
-**Option 2: Using Node.js**
-```bash
-cd frontend
-npx http-server . -p 3000
-```
+**How it works:**
+- Route `/` → serves login page
+- Route `/dashboard` → serves dashboard page  
+- Route `/api/users/*` → user API endpoints
+- Route `/api/schedules/*` → schedule API endpoints
+- Static `/css/*` and `/js/*` → CSS and JavaScript files
 
-Then open your browser and go to: `http://localhost:3000`
+### Same-Origin Advantage
 
-**Why:** Static files must be served over HTTP for cookies to work properly. Browsers block cookies on the `file://` protocol.
-
-### CORS Configuration
-- Frontend served on `http://localhost:3000` via simple HTTP server
-- Backend running on `http://localhost:4000`
-- Cookies are sent with all frontend-to-backend requests (HTTP-only, `credentials: 'include'`)
+By running frontend and backend on the **same port (4000)**, we avoid all cross-origin cookie issues. Cookies work seamlessly!
 
 ## Ports and URLs
 
-- Frontend: Accessible at file system or via static server (e.g., `http://localhost:3000`)
-- Backend API: `http://localhost:4000`
+- **Application**: `http://localhost:4000`
+  - Login page: `/`
+  - Dashboard: `/dashboard`
+  - API: `/api/*`
 
-Frontend files calling backend:
-
-- `frontend/views/login.html` - Login/Register page
-- `frontend/public/js/dashboard.js` - Schedule dashboard logic
+Since frontend and backend run on the same port, cookies work perfectly without any cross-origin complications.
 
 ## Tech Stack
 

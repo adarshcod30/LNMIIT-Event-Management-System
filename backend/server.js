@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const path = require('path');
 const connectDB = require('./config/db');
 
 const userRoutes = require('./modules/users/userRoutes');
@@ -23,11 +24,12 @@ const corsOptions = {
     allowedHeaders: ['Content-Type', 'Authorization']
 };
 
-app.use(cors(corsOptions));
-// Explicitly handle preflight requests
-app.options('*', cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
+
+// Serve static frontend files (CSS, JS)
+app.use('/css', express.static(path.join(__dirname, '../frontend/public/css')));
+app.use('/js', express.static(path.join(__dirname, '../frontend/public/js')));
 
 // Log all incoming requests
 app.use((req, res, next) => {
@@ -43,6 +45,15 @@ app.get('/api/health', (req, res) => {
 
 app.use('/api/users', userRoutes);
 app.use('/api/schedules', scheduleRoutes);
+
+// Serve HTML pages (after API routes)
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/views/login.html'));
+});
+
+app.get('/dashboard', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/views/dashboard.html'));
+});
 
 connectDB().then(() => {
     app.listen(BACKEND_PORT, () => {

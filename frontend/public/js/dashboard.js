@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:4000';
+const API_BASE_URL = '';
 
 const form = document.getElementById('scheduleForm');
 const tableBody = document.getElementById('scheduleTableBody');
@@ -78,7 +78,7 @@ async function logout() {
 }
 
 function redirectToLogin() {
-    window.location.href = './login.html';
+    window.location.href = '/';
 }
 
 function formatDate(value) {
