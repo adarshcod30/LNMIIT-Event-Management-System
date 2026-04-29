@@ -44,12 +44,11 @@ const login = async (req, res) => {
 
         const token = generateToken(user);
 
-        // Set cookie for cross-origin requests (development)
+        // Set cookie for development (localhost HTTP)
         res.cookie('token', token, {
             maxAge: 24 * 60 * 60 * 1000,
             path: '/',
-            sameSite: 'None',
-            secure: false  // For localhost development
+            sameSite: 'Lax'
         });
 
         console.log('Cookie set for user:', user._id);
@@ -65,8 +64,7 @@ const login = async (req, res) => {
 const logout = (req, res) => {
     res.clearCookie('token', {
         path: '/',
-        sameSite: 'None',
-        secure: false
+        sameSite: 'Lax'
     });
 
     res.json({ message: 'Logged out successfully.' });
