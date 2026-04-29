@@ -44,11 +44,10 @@ const login = async (req, res) => {
 
         const token = generateToken(user);
 
-        // Set cookie to work across ports on localhost
+        // Set cookie without domain restriction (works for any localhost address)
         res.cookie('token', token, {
             maxAge: 24 * 60 * 60 * 1000,
-            path: '/',
-            domain: 'localhost'
+            path: '/'
         });
 
         console.log('Cookie set for user:', user._id);
@@ -63,8 +62,7 @@ const login = async (req, res) => {
 
 const logout = (req, res) => {
     res.clearCookie('token', {
-        path: '/',
-        domain: 'localhost'
+        path: '/'
     });
 
     res.json({ message: 'Logged out successfully.' });
