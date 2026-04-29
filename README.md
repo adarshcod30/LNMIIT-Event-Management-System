@@ -29,7 +29,6 @@ A simple full-stack scheduling project built for learning:
 │   └── utils/
 │       └── jwt.js
 ├── frontend/
-│   ├── server.js
 │   ├── public/
 │   │   ├── css/
 │   │   │   └── style.css
@@ -44,15 +43,42 @@ A simple full-stack scheduling project built for learning:
 └── README.md
 ```
 
+## Running the Application
+
+### Backend
+```bash
+npm install
+npm start
+# or for development with auto-reload:
+npm run dev
+```
+Backend runs on `http://localhost:4000`
+
+### Frontend
+Open `frontend/views/login.html` directly in your browser, or use a simple static server:
+```bash
+# Option 1: Python (if available)
+cd frontend && python -m http.server 3000
+
+# Option 2: Node.js global http-server
+npx http-server frontend -p 3000
+```
+Frontend will be accessible at the URL shown (e.g., `http://localhost:3000` or `http://127.0.0.1:3000`)
+
+### CORS Configuration
+- Frontend and backend run on different ports
+- Backend (`http://localhost:4000`) is configured with CORS to accept requests from frontend origins
+- Cookies are sent with all frontend-to-backend requests (HTTP-only, `credentials: 'include'`)
 
 ## Ports and URLs
 
-- Frontend: `http://localhost:3000`
+- Frontend: Accessible at file system or via static server (e.g., `http://localhost:3000`)
 - Backend API: `http://localhost:4000`
 
 Frontend files calling backend:
-- `frontend/views/login.html`
-- `frontend/public/js/dashboard.js`
+
+- `frontend/views/login.html` - Login/Register page
+- `frontend/public/js/dashboard.js` - Schedule dashboard logic
 
 ## Tech Stack
 
@@ -96,6 +122,7 @@ Frontend files calling backend:
 ### `backend/modules/users/userModel.js`
 
 Simplified schema:
+
 - `name` (required)
 - `email` (required, unique)
 - `password` (required)
@@ -117,6 +144,7 @@ Simplified schema:
 ### `backend/modules/schedules/scheduleModel.js`
 
 Simplified schema:
+
 - `eventName`
 - `roundName`
 - `roundNumber`
@@ -136,6 +164,7 @@ Simplified schema:
 ### `backend/modules/schedules/scheduleRoutes.js`
 
 All routes protected with auth middleware:
+
 - `GET /api/schedules`
 - `POST /api/schedules`
 - `PUT /api/schedules/:id`
@@ -188,6 +217,7 @@ All routes protected with auth middleware:
 Because frontend and backend run on different ports, CORS is enabled in backend.
 
 Current behavior:
+
 - Handles preflight `OPTIONS` requests.
 - Allows credentialed requests.
 - Returns the requesting origin (not wildcard `*`) for browser compatibility with cookies.
