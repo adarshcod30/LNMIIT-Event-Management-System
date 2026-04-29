@@ -65,7 +65,7 @@ async function logout() {
 }
 
 function redirectToLogin() {
-    window.location.href = 'http://localhost:3000/';
+    window.location.href = './login.html';
 }
 
 function formatDate(value) {

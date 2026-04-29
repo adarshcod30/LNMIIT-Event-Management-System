@@ -86,13 +86,14 @@
                 if (res.ok) {
                     showAlert('Login successful.', 'success');
                     setTimeout(() => {
-                        window.location.href = '/dashboard';
+                        window.location.href = './dashboard.html';
                     }, 400);
                 } else {
                     showAlert(data.message, 'error');
                 }
             } catch (err) {
-                showAlert('Server error. Please try again.', 'error');
+                console.error('Login error:', err);
+                showAlert('Server error. Check backend is running on ' + API_BASE_URL, 'error');
             }
         }
 
@@ -125,7 +126,8 @@
                     showAlert(data.message, 'error');
                 }
             } catch (err) {
-                showAlert('Server error. Please try again.', 'error');
+                console.error('Register error:', err);
+                showAlert('Server error. Check backend is running on ' + API_BASE_URL, 'error');
             }
         }
 
