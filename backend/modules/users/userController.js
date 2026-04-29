@@ -45,10 +45,12 @@ const login = async (req, res) => {
         const token = generateToken(user);
 
         res.cookie('token', token, {
-            // httpOnly: true,
-            maxAge: 24 * 60 * 60 * 1000
+            maxAge: 24 * 60 * 60 * 1000,
+            sameSite: 'Lax',
+            path: '/'
         });
 
+        console.log('Cookie set for user:', user._id);
         res.json({
             message: 'Login successful!',
             user: { id: user._id, name: user.name, email: user.email }

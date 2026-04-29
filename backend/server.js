@@ -28,6 +28,15 @@ app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
+
+// Log all incoming requests
+app.use((req, res, next) => {
+    console.log(`\n[${new Date().toISOString()}] ${req.method} ${req.path}`);
+    console.log('Origin:', req.get('origin'));
+    console.log('Cookies:', req.cookies);
+    next();
+});
+
 app.get('/api/health', (req, res) => {
     res.json({ message: 'Backend is running.' });
 });
