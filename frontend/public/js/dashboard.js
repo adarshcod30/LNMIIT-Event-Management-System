@@ -14,6 +14,7 @@ initDashboard();
 
 async function initDashboard() {
     console.log('Dashboard loading, checking session...');
+    console.log('Checking cookies available:', document.cookie);
     const me = await api('/api/users/me');
     console.log('Session check response:', me);
 
