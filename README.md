@@ -29,6 +29,7 @@ A simple full-stack scheduling project built for learning:
 │   └── utils/
 │       └── jwt.js
 ├── frontend/
+│   ├── server.js
 │   ├── public/
 │   │   ├── css/
 │   │   │   └── style.css
@@ -45,7 +46,7 @@ A simple full-stack scheduling project built for learning:
 
 ## Running the Application
 
-### Backend
+### Start Backend (Required)
 ```bash
 npm install
 npm start
@@ -54,20 +55,21 @@ npm run dev
 ```
 Backend runs on `http://localhost:4000`
 
-### Frontend
-Open `frontend/views/login.html` directly in your browser, or use a simple static server:
+### Start Frontend (Required for cookies to work)
+In another terminal:
 ```bash
-# Option 1: Python (if available)
-cd frontend && python -m http.server 3000
-
-# Option 2: Node.js global http-server
-npx http-server frontend -p 3000
+npm run start:frontend
+# or for development with auto-reload:
+npm run dev:frontend
 ```
-Frontend will be accessible at the URL shown (e.g., `http://localhost:3000` or `http://127.0.0.1:3000`)
+Frontend runs on `http://localhost:3000`
+
+**Important:** Do NOT open `login.html` directly as a file (file://). Use the frontend server instead. Browsers don't support cookies when using the file:// protocol, so the login won't work without HTTP.
 
 ### CORS Configuration
-- Frontend and backend run on different ports
-- Backend (`http://localhost:4000`) is configured with CORS to accept requests from frontend origins
+- Frontend runs on `http://localhost:3000` (via Node.js static server)
+- Backend runs on `http://localhost:4000`
+- Backend is configured with CORS to accept requests from frontend
 - Cookies are sent with all frontend-to-backend requests (HTTP-only, `credentials: 'include'`)
 
 ## Ports and URLs

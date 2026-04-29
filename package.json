@@ -6,8 +6,10 @@
   "scripts": {
     "start": "npm run start:backend",
     "start:backend": "node backend/server.js",
+    "start:frontend": "node frontend/server.js",
     "dev": "npm run dev:backend",
-    "dev:backend": "nodemon backend/server.js"
+    "dev:backend": "nodemon backend/server.js",
+    "dev:frontend": "nodemon frontend/server.js"
   },
   "keywords": [
     "scheduling",
