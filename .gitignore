@@ -1,3 +1,11 @@
 node_modules/
 .env
 
+
+# local agent and editor files, never committed
+.claude/
+.claude.json
+CLAUDE.local.md
+CLAUDE.md
+AGENTS.md
+.DS_Store
