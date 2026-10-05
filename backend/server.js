@@ -1,62 +1,41 @@
-const express = require('express');
-const cors = require('cors');
-const cookieParser = require('cookie-parser');
-const path = require('path');
-const connectDB = require('./config/db');
+// ================================================================
+// server.js: process entry point
+// ================================================================
+// Loads configuration, connects to MongoDB, makes sure the admin
+// account exists and starts listening. The Express app itself is
+// built in app.js so that tests can use it without any of this.
+// ================================================================
 
-const userRoutes = require('./modules/users/userRoutes');
-const scheduleRoutes = require('./modules/schedules/scheduleRoutes');
+require('dotenv').config();
 
-const app = express();
-const BACKEND_PORT = 4000;
+const mongoose = require('mongoose');
+const { assertProductionConfig } = require('./lib/config');
+const connectDB = require('./lib/db');
+const { bootstrapAdmin } = require('./lib/bootstrapAdmin');
+const { createShutdown } = require('./lib/shutdown');
+const { createApp } = require('./app');
 
-// For cookie auth, do not use '*' origin. Reflect requesting origin instead.
-const corsOptions = {
-    origin: (origin, callback) => {
-        // Allow requests without an Origin header (like curl/Postman).
-        if (!origin) {
-            return callback(null, true);
-        }
-        return callback(null, origin);
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-};
+// A bad production configuration should stop here, with every problem listed
+assertProductionConfig();
 
-app.use(express.json());
-app.use(cookieParser());
+const PORT = process.env.PORT || 5001;
 
-// Serve static frontend files (CSS, JS)
-app.use('/css', express.static(path.join(__dirname, '../frontend/public/css')));
-app.use('/js', express.static(path.join(__dirname, '../frontend/public/js')));
+connectDB().then(async () => {
+  await bootstrapAdmin();
 
-// Log all incoming requests
-app.use((req, res, next) => {
-    console.log(`\n[${new Date().toISOString()}] ${req.method} ${req.path}`);
-    console.log('Origin:', req.get('origin'));
-    console.log('Cookies:', req.cookies);
-    next();
-});
+  const server = createApp().listen(PORT, () => {
+    console.log(`\n LNMIIT Event Hub API running on http://localhost:${PORT}`);
+    console.log(` Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(` Frontend URL: ${process.env.CLIENT_URL || 'http://localhost:5173'}\n`);
+  });
 
-app.get('/api/health', (req, res) => {
-    res.json({ message: 'Backend is running.' });
-});
-
-app.use('/api/users', userRoutes);
-app.use('/api/schedules', scheduleRoutes);
-
-// Serve HTML pages (after API routes)
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/views/login.html'));
-});
-
-app.get('/dashboard', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/views/dashboard.html'));
-});
-
-connectDB().then(() => {
-    app.listen(BACKEND_PORT, () => {
-        console.log(`Backend running on http://localhost:${BACKEND_PORT}`);
-    });
+  const shutdown = createShutdown({
+    server,
+    closeDatabase: () => mongoose.connection.close(),
+  });
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
+}).catch((err) => {
+  console.error(' Failed to start server:', err.message);
+  process.exit(1);
 });
