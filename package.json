@@ -1,30 +1,32 @@
 {
-  "name": "basic-scheduling-module",
-  "version": "1.0.0",
-  "description": "Beginner level login and scheduling module using Node.js, Express and MongoDB",
-  "main": "backend/server.js",
+  "name": "lnmiit-event-management-system",
+  "version": "2.0.0",
+  "description": "LNMIIT Event Hub: a full-stack MERN system for scheduling, registering for and administering technical events",
+  "private": true,
   "scripts": {
-    "start": "npm run start:backend",
-    "start:backend": "node backend/server.js",
-    "dev": "npm run dev:backend",
-    "dev:backend": "nodemon backend/server.js"
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && npm run dev",
+    "client": "cd frontend && npm run dev",
+    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "seed": "cd backend && npm run seed",
+    "build": "cd frontend && npm run build",
+    "test": "cd backend && npm test",
+    "test:coverage": "cd backend && npm run test:coverage",
+    "lint": "cd frontend && npm run lint"
   },
   "keywords": [
-    "scheduling",
+    "lnmiit",
+    "events",
+    "hackathon",
+    "mern",
     "express",
-    "mongodb"
+    "react",
+    "jest",
+    "supertest"
   ],
-  "author": "Student",
-  "license": "ISC",
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "cookie-parser": "^1.4.7",
-    "cors": "^2.8.6",
-    "express": "^4.21.0",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.7.0"
-  },
+  "author": "Adarsh Dwivedi",
+  "license": "MIT",
   "devDependencies": {
-    "nodemon": "^3.1.0"
+    "concurrently": "^8.2.2"
   }
 }
